@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>El Cruce 2027 — Plan Integral de Gino</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;--bg2:#131313;--bg3:#1a1a1a;--bg4:#222;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#f0ede8;--text2:#8a8680;--text3:#4a4845;
+  --accent:#e8734a;--accent2:#f09070;--accent-bg:rgba(232,115,74,0.1);--accent-border:rgba(232,115,74,0.25);
+  --green:#5cb88a;--green-bg:rgba(92,184,138,0.1);--green-border:rgba(92,184,138,0.25);
+  --blue:#5a8fd4;--blue-bg:rgba(90,143,212,0.1);--blue-border:rgba(90,143,212,0.25);
+  --gold:#c8a96e;--gold2:#e8c896;--gold-bg:rgba(200,169,110,0.1);--gold-border:rgba(200,169,110,0.25);
+  --red:#d46b5a;--red-bg:rgba(212,107,90,0.1);
+  --yellow:#d4a83a;--yellow-bg:rgba(212,168,58,0.1);
+  --radius:10px;--radius-lg:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6;}
+.app{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{width:220px;min-height:100vh;background:var(--bg2);border-right:1px solid var(--border);padding:18px 0;position:fixed;top:0;left:0;bottom:0;display:flex;flex-direction:column;z-index:10;overflow-y:auto;}
+.logo{padding:0 16px 18px;border-bottom:1px solid var(--border);}
+.logo-badge{font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);background:var(--accent-bg);border:1px solid var(--accent-border);padding:2px 7px;border-radius:4px;display:inline-block;margin-bottom:7px;}
+.logo-title{font-size:16px;font-weight:500;}
+.logo-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+.nav{padding:12px 8px;flex:1;}
+.nav-section{font-size:9px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text3);padding:0 8px;margin:12px 0 4px;}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;color:var(--text2);font-size:13px;transition:all 0.15s;user-select:none;}
+.nav-item:hover{background:var(--bg3);color:var(--text);}
+.nav-item.active{background:var(--accent-bg);color:var(--accent2);border:1px solid var(--accent-border);}
+.nav-icon{font-size:14px;flex-shrink:0;}
+.countdown-box{margin:0 8px 8px;padding:12px;background:var(--accent-bg);border:1px solid var(--accent-border);border-radius:var(--radius);}
+.countdown-num{font-size:28px;font-weight:300;color:var(--accent2);font-family:'DM Mono',monospace;}
+.countdown-label{font-size:10px;color:var(--text2);margin-top:2px;}
+.streak-box{margin:0 8px 8px;padding:12px;background:var(--gold-bg);border:1px solid var(--gold-border);border-radius:var(--radius);}
+.streak-num{font-size:28px;font-weight:300;color:var(--gold2);font-family:'DM Mono',monospace;}
+.streak-label{font-size:10px;color:var(--text2);margin-top:2px;}
+
+/* MAIN */
+.main{margin-left:220px;flex:1;padding:26px 30px;max-width:980px;}
+.page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;}
+.page-title{font-size:20px;font-weight:500;}
+.page-sub{font-size:12px;color:var(--text2);margin-top:3px;}
+.date-badge{font-family:'DM Mono',monospace;font-size:11px;color:var(--text3);background:var(--bg3);padding:5px 11px;border-radius:6px;border:1px solid var(--border);white-space:nowrap;}
+
+/* SECTIONS */
+.section-page{display:none;}
+.section-page.visible{display:block;animation:fadeIn 0.2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARDS */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:14px;}
+.card-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
+.stat-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:13px;}
+.stat-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;}
+.stat-val{font-size:21px;font-weight:300;font-family:'DM Mono',monospace;color:var(--text);margin:4px 0 2px;}
+.stat-sub{font-size:11px;color:var(--text2);}
+.prog-wrap{background:var(--bg3);height:3px;border-radius:2px;margin-top:7px;overflow:hidden;}
+.prog-fill{height:100%;border-radius:2px;background:var(--accent);transition:width 0.5s ease;}
+
+/* WEEK STRIP */
+.week-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:18px;}
+.wd{background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:7px 3px;text-align:center;}
+.wd.today{border-color:var(--accent-border);}
+.wd.done{border-color:var(--green-border);background:var(--green-bg);}
+.wd-n{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;}
+.wd-d{font-size:15px;font-weight:300;font-family:'DM Mono',monospace;color:var(--text2);margin:3px 0;}
+.wd.today .wd-d{color:var(--accent);}
+.wd.done .wd-d{color:var(--green);}
+.wd-dot{width:4px;height:4px;border-radius:50%;background:var(--text3);margin:0 auto;}
+.wd.done .wd-dot{background:var(--green);}
+.wd.today .wd-dot{background:var(--accent);}
+
+/* OBJ CARD */
+.obj-card{background:linear-gradient(135deg,rgba(232,115,74,0.12) 0%,rgba(232,115,74,0.04) 100%);border:1px solid var(--accent-border);border-radius:var(--radius-lg);padding:20px;margin-bottom:14px;}
+.badge{font-size:10px;padding:3px 9px;border-radius:4px;font-weight:500;}
+.badge-orange{background:var(--accent-bg);color:var(--accent2);border:1px solid var(--accent-border);}
+.badge-green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+.badge-blue{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border);}
+.badge-gold{background:var(--gold-bg);color:var(--gold2);border:1px solid var(--gold-border);}
+
+/* RACE CARD */
+.race-card{border:1px solid var(--border);border-radius:var(--radius);padding:13px 15px;margin-bottom:9px;background:var(--bg3);display:flex;align-items:center;gap:13px;}
+.race-card.past{opacity:0.55;}
+.race-card.next-r{border-color:var(--accent-border);background:var(--accent-bg);}
+.race-card.completed{border-color:var(--green-border);background:var(--green-bg);}
+.race-date-box{text-align:center;min-width:48px;}
+.race-day{font-size:20px;font-weight:300;font-family:'DM Mono',monospace;line-height:1;}
+.race-month{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;}
+.race-info{flex:1;}
+.race-name{font-size:13px;font-weight:500;}
+.race-meta{font-size:12px;color:var(--text2);margin-top:2px;}
+.race-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
+.days-to{font-size:11px;color:var(--accent);font-family:'DM Mono',monospace;}
+.race-result{font-family:'DM Mono',monospace;font-size:12px;color:var(--green);}
+
+/* DAY CARD GYM */
+.day-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:12px;overflow:hidden;transition:border-color 0.2s;}
+.day-card.done-day{border-color:var(--green-border);}
+.day-header{display:flex;align-items:center;justify-content:space-between;padding:14px 17px;cursor:pointer;user-select:none;}
+.day-header:hover{background:var(--bg3);}
+.day-left{display:flex;align-items:center;gap:13px;}
+.day-num{width:36px;height:36px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:12px;color:var(--text2);flex-shrink:0;}
+.day-card.done-day .day-num{background:var(--green-bg);border-color:var(--green-border);color:var(--green);}
+.day-name{font-size:14px;font-weight:500;}
+.day-muscle{font-size:11px;color:var(--text2);margin-top:2px;}
+.tag{font-size:9px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;padding:2px 8px;border-radius:4px;}
+.tag-fuerza{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border);}
+.tag-cardio{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border);}
+.tag-core{background:var(--gold-bg);color:var(--gold2);border:1px solid var(--gold-border);}
+.chevron{font-size:11px;color:var(--text3);transition:transform 0.2s;}
+.day-card.open .chevron{transform:rotate(180deg);}
+.ex-body{display:none;padding:0 17px 15px;}
+.day-card.open .ex-body{display:block;}
+.ex-group{margin-bottom:13px;}
+.ex-group-title{font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--gold2);margin-bottom:7px;padding:3px 0;border-bottom:1px solid var(--gold-border);}
+.ex-item{display:grid;grid-template-columns:1fr 50px 85px 28px;gap:5px;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
+.ex-item:last-child{border-bottom:none;}
+.ex-item-name{font-size:13px;color:var(--text);}
+.ex-item-tip{font-size:10px;color:var(--text3);margin-top:1px;}
+.ex-series{font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);text-align:center;}
+.ex-reps{font-family:'DM Mono',monospace;font-size:11px;color:var(--text2);}
+.ex-check{width:18px;height:18px;cursor:pointer;accent-color:var(--green);}
+.ex-header-row{display:grid;grid-template-columns:1fr 50px 85px 28px;gap:5px;padding:0 0 5px;border-bottom:1px solid var(--border2);margin-bottom:2px;}
+.ex-header-row span{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;}
+.complete-btn{margin-top:13px;width:100%;padding:10px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;}
+.complete-btn:hover{background:var(--bg4);color:var(--text);border-color:var(--accent-border);}
+.complete-btn.done{background:var(--green-bg);color:var(--green);border-color:var(--green-border);}
+
+/* FORMS */
+.form-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.inp{flex:1;min-width:100px;padding:8px 11px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color 0.2s;}
+.inp:focus{border-color:var(--accent-border);}
+.inp::placeholder{color:var(--text3);}
+.btn{padding:8px 15px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s;border:1px solid;}
+.btn-primary{background:var(--accent-bg);border-color:var(--accent-border);color:var(--accent2);}
+.btn-primary:hover{background:rgba(232,115,74,0.18);}
+.btn-ghost{background:var(--bg3);border-color:var(--border2);color:var(--text2);}
+.btn-ghost:hover{color:var(--text);}
+.btn-green{background:var(--green-bg);border-color:var(--green-border);color:var(--green);}
+.btn-danger{background:var(--red-bg);border-color:rgba(212,107,90,0.3);color:var(--red);}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{text-align:left;font-size:9px;font-weight:600;letter-spacing:0.07em;text-transform:uppercase;color:var(--text3);padding:7px 9px;border-bottom:1px solid var(--border);}
+.tbl td{padding:9px 9px;font-size:13px;color:var(--text2);border-bottom:1px solid var(--border);vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl td:first-child{color:var(--text);}
+.del-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:13px;padding:0 3px;transition:color 0.15s;}
+.del-btn:hover{color:var(--red);}
+.empty{text-align:center;padding:28px;color:var(--text3);font-size:13px;}
+
+/* IMC */
+.imc-bar-track{height:10px;border-radius:5px;overflow:hidden;margin:8px 0;background:linear-gradient(to right,#378ADD 0%,#5cb88a 20%,#5cb88a 45%,#d4a83a 60%,#d46b5a 75%,#a32d2d 100%);}
+.imc-marker-wrap{position:relative;height:14px;margin-top:-2px;}
+.imc-marker{position:absolute;width:3px;height:14px;background:var(--text);border-radius:2px;transform:translateX(-50%);transition:left 0.4s ease;}
+
+/* TIMELINE */
+.phase-wrap{position:relative;padding-left:26px;}
+.phase-wrap::before{content:'';position:absolute;left:6px;top:8px;bottom:8px;width:1px;background:var(--border2);}
+.phase-item{position:relative;margin-bottom:17px;}
+.phase-dot{position:absolute;left:-22px;top:4px;width:13px;height:13px;border-radius:50%;border:2px solid var(--border2);background:var(--bg);}
+.phase-item.done .phase-dot{border-color:var(--green);background:var(--green-bg);}
+.phase-item.current .phase-dot{border-color:var(--accent);background:var(--accent-bg);}
+.phase-name{font-size:13px;font-weight:500;}
+.phase-desc{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.5;}
+.phase-meta{font-size:10px;color:var(--text3);margin-top:3px;font-family:'DM Mono',monospace;}
+
+/* TIP */
+.tip-li{padding:9px 13px;border-left:2px solid var(--accent-border);background:var(--accent-bg);border-radius:0 8px 8px 0;font-size:13px;color:var(--text2);margin-bottom:7px;}
+.tip-li strong{color:var(--accent2);font-weight:500;}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.78);z-index:200;align-items:center;justify-content:center;padding:16px;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:22px;width:100%;max-width:460px;max-height:90vh;overflow-y:auto;}
+.modal-title{font-size:15px;font-weight:500;margin-bottom:16px;}
+.modal-row{margin-bottom:11px;}
+.modal-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;flex-wrap:wrap;}
+
+/* BOTTOM NAV */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:var(--bg2);border-top:1px solid var(--border);z-index:100;}
+.bn-inner{display:grid;grid-template-columns:repeat(6,1fr);}
+.bn-item{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 1px 10px;cursor:pointer;color:var(--text3);font-size:8px;font-weight:500;letter-spacing:0.03em;gap:3px;transition:color 0.15s;user-select:none;}
+.bn-item.active{color:var(--accent);}
+.bn-icon{font-size:17px;line-height:1;}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  .sidebar{display:none;}
+  .bottom-nav{display:block;}
+  .main{margin-left:0;padding:12px 12px 84px;}
+  .stats-row{grid-template-columns:repeat(2,1fr);}
+  .page-header{flex-direction:column;gap:7px;}
+  .form-row{flex-direction:column;}
+  .ex-item{grid-template-columns:1fr 40px 70px 24px;}
+  .race-card{flex-wrap:wrap;}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-badge">Meta 2027</div>
+    <div class="logo-title">El Cruce 2027</div>
+    <div class="logo-sub">Plan integral de Gino</div>
+  </div>
+  <nav class="nav">
+    <div class="nav-section">General</div>
+    <div class="nav-item active" onclick="go('dashboard')"><span class="nav-icon">🏔️</span>Dashboard</div>
+    <div class="nav-item" onclick="go('carreras')"><span class="nav-icon">🏁</span>Carreras</div>
+    <div class="nav-section">Entrenamiento</div>
+    <div class="nav-item" onclick="go('gym')"><span class="nav-icon">🏋️</span>Gym (3 días)</div>
+    <div class="nav-item" onclick="go('running')"><span class="nav-icon">🏃</span>Running</div>
+    <div class="nav-section">Seguimiento</div>
+    <div class="nav-item" onclick="go('peso')"><span class="nav-icon">⚖️</span>Peso & IMC</div>
+    <div class="nav-item" onclick="go('plan')"><span class="nav-icon">📅</span>Plan de fases</div>
+    <div class="nav-item" onclick="go('nutricion')"><span class="nav-icon">🥗</span>Nutrición</div>
+    <div class="nav-section">Datos</div>
+    <div class="nav-item" onclick="go('backup')"><span class="nav-icon">💾</span>Backup</div>
+  </nav>
+  <div class="countdown-box">
+    <div class="countdown-num" id="sb-dias">—</div>
+    <div class="countdown-label">días para El Cruce</div>
+  </div>
+  <div class="streak-box">
+    <div class="streak-num" id="sb-streak">0</div>
+    <div class="streak-label">días de racha gym</div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="page-header">
+    <div>
+      <div class="page-title" id="pg-title">Dashboard</div>
+      <div class="page-sub" id="pg-sub">Tu camino a El Cruce 2027</div>
+    </div>
+    <div class="date-badge" id="date-badge"></div>
+  </div>
+
+  <!-- ===== DASHBOARD ===== -->
+  <div id="sec-dashboard" class="section-page visible">
+    <div class="obj-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;">
+        <div>
+          <div style="font-size:18px;font-weight:500;color:var(--accent2);">🏔️ El Cruce Saucony 2027</div>
+          <div style="font-size:13px;color:var(--text2);margin-top:4px;">Diciembre 2027 · Bariloche, Argentina → Chile</div>
+          <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;">
+            <span class="badge badge-orange">100 km</span>
+            <span class="badge badge-orange">3 etapas · 3 días</span>
+            <span class="badge badge-green">~16 meses</span>
+            <span class="badge badge-blue">Trail running</span>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:36px;font-weight:300;font-family:'DM Mono',monospace;color:var(--accent2);" id="db-dias">—</div>
+          <div style="font-size:11px;color:var(--text2);">días restantes</div>
+        </div>
+      </div>
+      <div class="prog-wrap" style="height:6px;margin-top:14px;"><div class="prog-fill" id="db-prog" style="width:0%;background:var(--accent);"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text3);margin-top:4px;font-family:'DM Mono',monospace;"><span>Ago 2026</span><span id="db-pct">0%</span><span>Dic 2027</span></div>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-label">Km totales</div><div class="stat-val" id="db-km">0</div><div class="stat-sub">running</div><div class="prog-wrap"><div class="prog-fill" id="db-km-bar" style="width:0%"></div></div></div>
+      <div class="stat-card"><div class="stat-label">Días gym</div><div class="stat-val" id="db-gym">0</div><div class="stat-sub">completados</div><div class="prog-wrap"><div class="prog-fill" id="db-gym-bar" style="width:0%;background:var(--gold)"></div></div></div>
+      <div class="stat-card"><div class="stat-label">Carreras</div><div class="stat-val" id="db-races">0</div><div class="stat-sub">completadas</div><div class="prog-wrap"><div class="prog-fill" id="db-races-bar" style="width:0%;background:var(--green)"></div></div></div>
+      <div class="stat-card"><div class="stat-label">Peso actual</div><div class="stat-val" id="db-peso">95</div><div class="stat-sub">kg · IMC <span id="db-imc">29.6</span></div><div class="prog-wrap"><div class="prog-fill" id="db-peso-bar" style="width:0%;background:var(--blue)"></div></div></div>
+    </div>
+
+    <div class="week-strip" id="db-week"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+      <div class="card"><div class="card-title">🏁 Próxima carrera</div><div id="db-next-race"><div class="empty">Sin carreras cargadas.</div></div></div>
+      <div class="card"><div class="card-title">🏃 Último entreno</div><div id="db-last-run"><div class="empty">Sin entrenos registrados.</div></div></div>
+    </div>
+  </div>
+
+  <!-- ===== CARRERAS ===== -->
+  <div id="sec-carreras" class="section-page">
+    <div class="card">
+      <div class="card-title">➕ Agregar carrera</div>
+      <div class="form-row">
+        <input type="text" class="inp" id="r-nombre" placeholder="Nombre de la carrera" style="flex:2;">
+        <input type="date" class="inp" id="r-fecha" style="max-width:155px;">
+        <input type="number" class="inp" id="r-km" placeholder="Km" step="0.1" min="1" style="max-width:90px;">
+      </div>
+      <div class="form-row">
+        <select class="inp" id="r-tipo" style="max-width:175px;">
+          <option value="Asfalto">🏙️ Asfalto</option>
+          <option value="Trail">🌲 Trail</option>
+          <option value="Montaña">🏔️ Montaña</option>
+          <option value="Cross">🌿 Cross country</option>
+          <option value="Pista">🏟️ Pista</option>
+          <option value="Etapas">📅 Por etapas</option>
+          <option value="Virtual">💻 Virtual</option>
+        </select>
+        <input type="text" class="inp" id="r-lugar" placeholder="Lugar (ciudad...)">
+        <button class="btn btn-primary" onclick="addRace()">Agregar</button>
+      </div>
+    </div>
+    <div class="card"><div class="card-title">📋 Todas las carreras</div><div id="races-list"><div class="empty">No hay carreras cargadas.</div></div></div>
+    <div class="card" id="result-card" style="display:none;">
+      <div class="card-title">✅ Registrar resultado</div>
+      <div class="form-row">
+        <input type="text" class="inp" id="res-time" placeholder="Tiempo (ej: 1:23:45)" style="max-width:150px;">
+        <input type="text" class="inp" id="res-nota" placeholder="Nota (cómo te fue...)">
+        <button class="btn btn-green" onclick="saveResult()">Guardar</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('result-card').style.display='none'">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== GYM ===== -->
+  <div id="sec-gym" class="section-page">
+    <div class="stats-row" style="grid-template-columns:repeat(3,1fr);">
+      <div class="stat-card"><div class="stat-label">Esta semana</div><div class="stat-val" id="gym-week">0/3</div><div class="stat-sub">días completados</div><div class="prog-wrap"><div class="prog-fill" id="gym-week-bar" style="width:0%;background:var(--gold)"></div></div></div>
+      <div class="stat-card"><div class="stat-label">Total histórico</div><div class="stat-val" id="gym-total">0</div><div class="stat-sub">días de gym</div></div>
+      <div class="stat-card"><div class="stat-label">Racha</div><div class="stat-val" id="gym-racha" style="color:var(--gold2);">0</div><div class="stat-sub">días consecutivos</div></div>
+    </div>
+
+    <!-- DÍA A -->
+    <div class="day-card" id="card-A">
+      <div class="day-header" onclick="toggleDay('A')">
+        <div class="day-left">
+          <div class="day-num" id="num-A">A</div>
+          <div><div class="day-name">Día A — Pecho · Hombros · Tríceps · Core</div><div class="day-muscle">Press · Militar · Fondos · Plancha · Crunch</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="tag tag-fuerza">Fuerza</span><span class="tag tag-core">Core</span><span class="chevron">▾</span></div>
+      </div>
+      <div class="ex-body" id="body-A">
+        <div class="ex-group">
+          <div class="ex-group-title">🫁 Pecho</div>
+          <div class="ex-header-row"><span>Ejercicio</span><span>Series</span><span>Reps/Tiempo</span><span>✓</span></div>
+          <div class="ex-item"><div><div class="ex-item-name">Press de banca plano con barra</div><div class="ex-item-tip">Agarre ancho, bajar hasta pecho, empujar explosivo</div></div><div class="ex-series">4</div><div class="ex-reps">10–12 reps</div><input type="checkbox" class="ex-check" data-day="A" data-ex="p1"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Press inclinado con mancuernas (30°)</div><div class="ex-item-tip">Pecho superior, codos a 45°</div></div><div class="ex-series">3</div><div class="ex-reps">12 reps</div><input type="checkbox" class="ex-check" data-day="A" data-ex="p2"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Aperturas en polea cruzada</div><div class="ex-item-tip">Brazos levemente flexionados, juntar en el centro</div></div><div class="ex-series">3</div><div class="ex-reps">15 reps</div><input type="checkbox" class="ex-check" data-day="A" data-ex="p3"></div>
+        </div>
+        <div class="ex-group">
+          <div class="ex-group-title">💪 Hombros</div>
+          <div class="ex-header-row"><span>Ejercicio</span><span>Series</span><span>Reps/Tiempo</span><span>✓</span></div>
+          <div class="ex-item"><div><div class="ex-item-name">Press militar con barra (sentado)</div><div class="ex-item-tip">Espalda pegada al respaldo, no arquear</div></div><div class="ex-series">4</div><div class="ex-reps">10 reps</div><input type="checkbox" class="ex-check" data-day="A" data-ex="h1"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Elevaciones laterales con mancuernas</div><div class="ex-item-tip">Codos levemente flexionados, sin balancear</div></div><div class="ex-series">4</div><div class="ex-reps">15 reps</div><input type="checkbox" class="ex-check" data-day="A" data-ex="h2"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Pájaros en polea baja (deltoides posterior)</div><div class="ex-item-tip">Torso inclinado, brazos al costado</div></div><div class="ex-series">3</div><div class="ex-reps">15 reps</div><input type="checkbox" class="ex-check" data-day="A" data-ex="h3"></div>
+        </div>
+        <div class="ex-group">
+          <div class="ex-group-title">🦾 Tríceps</div>
+          <div class="ex-header-row"><span>Ejercicio</span><span>Series</span><span>Reps/Tiempo</span><span>✓</span></div>
+          <div class="ex-item"><div><div class="ex-item-name">Fondos en paralelas</div><div class="ex-item-tip">Cuerpo ligeramente inclinado al frente</div></div><div class="ex-series">3</div><div class="ex-reps">10–12 reps</div><input type="checkbox" class="ex-check" data-day="A" data-ex="t1"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Press francés con barra Z</div><div class="ex-item-tip">Codos fijos, bajar detrás de la cabeza</div></div><div class="ex-series">3</div><div class="ex-reps">12 reps</div><input type="checkbox" class="ex-check" data-day="A" data-ex="t2"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Extensión en polea alta (cuerda)</div><div class="ex-item-tip">Codos pegados al cuerpo, extensión completa</div></div><div class="ex-series">3</div><div class="ex-reps">15 reps</div><input type="checkbox" class="ex-check" data-day="A" data-ex="t3"></div>
+        </div>
+        <div class="ex-group">
+          <div class="ex-group-title">🔥 Core & Abdominales</div>
+          <div class="ex-header-row"><span>Ejercicio</span><span>Series</span><span>Reps/Tiempo</span><span>✓</span></div>
+          <div class="ex-item"><div><div class="ex-item-name">Plancha frontal</div><div class="ex-item-tip">Cuerpo recto, apretar abdomen y glúteos</div></div><div class="ex-series">4</div><div class="ex-reps">45–60 seg</div><input type="checkbox" class="ex-check" data-day="A" data-ex="c1"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Crunch bicicleta</div><div class="ex-item-tip">Oblicuos + recto abdominal, sin tirar del cuello</div></div><div class="ex-series">3</div><div class="ex-reps">20 reps</div><input type="checkbox" class="ex-check" data-day="A" data-ex="c2"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Elevación de piernas colgado</div><div class="ex-item-tip">Piernas rectas, no balancear el cuerpo</div></div><div class="ex-series">4</div><div class="ex-reps">12–15 reps</div><input type="checkbox" class="ex-check" data-day="A" data-ex="c3"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Rueda abdominal (ab wheel)</div><div class="ex-item-tip">Extenderse lento, volver contrayendo el core</div></div><div class="ex-series">3</div><div class="ex-reps">10 reps</div><input type="checkbox" class="ex-check" data-day="A" data-ex="c4"></div>
+        </div>
+        <button class="complete-btn" id="btn-A" onclick="completeGym('A')">Marcar Día A como completado</button>
+      </div>
+    </div>
+
+    <!-- DÍA B -->
+    <div class="day-card" id="card-B">
+      <div class="day-header" onclick="toggleDay('B')">
+        <div class="day-left">
+          <div class="day-num" id="num-B">B</div>
+          <div><div class="day-name">Día B — Espalda · Bíceps · Trapecios · Core</div><div class="day-muscle">Dominadas · Remo · Curl · Plancha lateral</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="tag tag-fuerza">Fuerza</span><span class="tag tag-core">Core</span><span class="chevron">▾</span></div>
+      </div>
+      <div class="ex-body" id="body-B">
+        <div class="ex-group">
+          <div class="ex-group-title">🏗️ Espalda</div>
+          <div class="ex-header-row"><span>Ejercicio</span><span>Series</span><span>Reps/Tiempo</span><span>✓</span></div>
+          <div class="ex-item"><div><div class="ex-item-name">Dominadas (o jalón al pecho)</div><div class="ex-item-tip">Agarre pronado ancho, bajar hasta mentón</div></div><div class="ex-series">4</div><div class="ex-reps">8–10 reps</div><input type="checkbox" class="ex-check" data-day="B" data-ex="e1"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Remo con barra (inclinado 45°)</div><div class="ex-item-tip">Pecho apoyado, tirar hacia el ombligo</div></div><div class="ex-series">4</div><div class="ex-reps">10 reps</div><input type="checkbox" class="ex-check" data-day="B" data-ex="e2"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Remo en polea baja sentado</div><div class="ex-item-tip">Espalda recta, codos atrás, apretar omóplatos</div></div><div class="ex-series">3</div><div class="ex-reps">12 reps</div><input type="checkbox" class="ex-check" data-day="B" data-ex="e3"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Pull-over con mancuerna</div><div class="ex-item-tip">Tumbado en banco, arco amplio con brazos semi-rectos</div></div><div class="ex-series">3</div><div class="ex-reps">12 reps</div><input type="checkbox" class="ex-check" data-day="B" data-ex="e4"></div>
+        </div>
+        <div class="ex-group">
+          <div class="ex-group-title">💪 Bíceps</div>
+          <div class="ex-header-row"><span>Ejercicio</span><span>Series</span><span>Reps/Tiempo</span><span>✓</span></div>
+          <div class="ex-item"><div><div class="ex-item-name">Curl con barra Z</div><div class="ex-item-tip">Codos fijos, subir contrayendo, bajar 3 seg</div></div><div class="ex-series">4</div><div class="ex-reps">10–12 reps</div><input type="checkbox" class="ex-check" data-day="B" data-ex="b1"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Curl martillo con mancuernas</div><div class="ex-item-tip">Agarre neutro, trabaja braquial</div></div><div class="ex-series">3</div><div class="ex-reps">12 reps</div><input type="checkbox" class="ex-check" data-day="B" data-ex="b2"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Curl en polea baja (cable)</div><div class="ex-item-tip">Tensión constante, ideal para el pico</div></div><div class="ex-series">3</div><div class="ex-reps">15 reps</div><input type="checkbox" class="ex-check" data-day="B" data-ex="b3"></div>
+        </div>
+        <div class="ex-group">
+          <div class="ex-group-title">🗻 Trapecios</div>
+          <div class="ex-header-row"><span>Ejercicio</span><span>Series</span><span>Reps/Tiempo</span><span>✓</span></div>
+          <div class="ex-item"><div><div class="ex-item-name">Encogimientos con barra</div><div class="ex-item-tip">Subir hombros directo hacia arriba, no rotar</div></div><div class="ex-series">4</div><div class="ex-reps">15 reps</div><input type="checkbox" class="ex-check" data-day="B" data-ex="tr1"></div>
+        </div>
+        <div class="ex-group">
+          <div class="ex-group-title">🔥 Core & Abdominales</div>
+          <div class="ex-header-row"><span>Ejercicio</span><span>Series</span><span>Reps/Tiempo</span><span>✓</span></div>
+          <div class="ex-item"><div><div class="ex-item-name">Crunch en polea alta (cuerda)</div><div class="ex-item-tip">Flexionar tronco, no tirar con los brazos</div></div><div class="ex-series">4</div><div class="ex-reps">15–20 reps</div><input type="checkbox" class="ex-check" data-day="B" data-ex="cb1"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Plancha lateral (cada lado)</div><div class="ex-item-tip">Cuerpo recto, oblicuos activos</div></div><div class="ex-series">3</div><div class="ex-reps">30–40 seg</div><input type="checkbox" class="ex-check" data-day="B" data-ex="cb2"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Mountain climbers</div><div class="ex-item-tip">Ritmo controlado, cadera abajo, respirar</div></div><div class="ex-series">3</div><div class="ex-reps">30 seg</div><input type="checkbox" class="ex-check" data-day="B" data-ex="cb3"></div>
+        </div>
+        <button class="complete-btn" id="btn-B" onclick="completeGym('B')">Marcar Día B como completado</button>
+      </div>
+    </div>
+
+    <!-- DÍA C -->
+    <div class="day-card" id="card-C">
+      <div class="day-header" onclick="toggleDay('C')">
+        <div class="day-left">
+          <div class="day-num" id="num-C">C</div>
+          <div><div class="day-name">Día C — Piernas completo · Core</div><div class="day-muscle">Sentadilla · Prensa · Femoral · Gemelos · Abs</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;"><span class="tag tag-fuerza">Fuerza</span><span class="tag tag-core">Core</span><span class="chevron">▾</span></div>
+      </div>
+      <div class="ex-body" id="body-C">
+        <div class="ex-group">
+          <div class="ex-group-title">🦵 Cuádriceps</div>
+          <div class="ex-header-row"><span>Ejercicio</span><span>Series</span><span>Reps/Tiempo</span><span>✓</span></div>
+          <div class="ex-item"><div><div class="ex-item-name">Sentadilla con barra libre</div><div class="ex-item-tip">Bajar hasta paralelo, rodillas no sobrepasar puntas</div></div><div class="ex-series">4</div><div class="ex-reps">10 reps</div><input type="checkbox" class="ex-check" data-day="C" data-ex="q1"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Prensa de piernas (45°)</div><div class="ex-item-tip">Pies al ancho de hombros, bajar lento</div></div><div class="ex-series">4</div><div class="ex-reps">12 reps</div><input type="checkbox" class="ex-check" data-day="C" data-ex="q2"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Extensión de cuádriceps en máquina</div><div class="ex-item-tip">Extensión completa, bajar lento 3 seg</div></div><div class="ex-series">3</div><div class="ex-reps">15 reps</div><input type="checkbox" class="ex-check" data-day="C" data-ex="q3"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Zancadas con mancuernas (caminando)</div><div class="ex-item-tip">Rodilla trasera casi toca el suelo, tronco recto</div></div><div class="ex-series">3</div><div class="ex-reps">12 c/lado</div><input type="checkbox" class="ex-check" data-day="C" data-ex="q4"></div>
+        </div>
+        <div class="ex-group">
+          <div class="ex-group-title">🍑 Isquiotibiales & Glúteos</div>
+          <div class="ex-header-row"><span>Ejercicio</span><span>Series</span><span>Reps/Tiempo</span><span>✓</span></div>
+          <div class="ex-item"><div><div class="ex-item-name">Curl de isquiotibiales tumbado</div><div class="ex-item-tip">Bajar lento, no levantar caderas</div></div><div class="ex-series">4</div><div class="ex-reps">12–15 reps</div><input type="checkbox" class="ex-check" data-day="C" data-ex="f1"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Peso muerto rumano con barra</div><div class="ex-item-tip">Espalda neutra, bajar hasta sentir estiramiento</div></div><div class="ex-series">3</div><div class="ex-reps">10 reps</div><input type="checkbox" class="ex-check" data-day="C" data-ex="f2"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Hip thrust con barra</div><div class="ex-item-tip">Empuje explosivo, apretar glúteo arriba</div></div><div class="ex-series">4</div><div class="ex-reps">12 reps</div><input type="checkbox" class="ex-check" data-day="C" data-ex="f3"></div>
+        </div>
+        <div class="ex-group">
+          <div class="ex-group-title">🦶 Gemelos</div>
+          <div class="ex-header-row"><span>Ejercicio</span><span>Series</span><span>Reps/Tiempo</span><span>✓</span></div>
+          <div class="ex-item"><div><div class="ex-item-name">Elevación de gemelos de pie (máquina)</div><div class="ex-item-tip">Bajar hasta estiramiento completo, subir de puntas</div></div><div class="ex-series">4</div><div class="ex-reps">20 reps</div><input type="checkbox" class="ex-check" data-day="C" data-ex="g1"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Gemelos sentado en máquina</div><div class="ex-item-tip">Trabaja el sóleo, rango completo</div></div><div class="ex-series">3</div><div class="ex-reps">20 reps</div><input type="checkbox" class="ex-check" data-day="C" data-ex="g2"></div>
+        </div>
+        <div class="ex-group">
+          <div class="ex-group-title">🔥 Core & Abdominales</div>
+          <div class="ex-header-row"><span>Ejercicio</span><span>Series</span><span>Reps/Tiempo</span><span>✓</span></div>
+          <div class="ex-item"><div><div class="ex-item-name">Plancha con toque de hombro</div><div class="ex-item-tip">Caderas estables, sin rotar el tronco</div></div><div class="ex-series">3</div><div class="ex-reps">20 reps</div><input type="checkbox" class="ex-check" data-day="C" data-ex="cc1"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Tijeras horizontales (piernas)</div><div class="ex-item-tip">Zona lumbar pegada al suelo, respirar</div></div><div class="ex-series">3</div><div class="ex-reps">30 seg</div><input type="checkbox" class="ex-check" data-day="C" data-ex="cc2"></div>
+          <div class="ex-item"><div><div class="ex-item-name">Dragon flag (o variante)</div><div class="ex-item-tip">Core total, ejercicio avanzado — hacerlo al final</div></div><div class="ex-series">3</div><div class="ex-reps">8–10 reps</div><input type="checkbox" class="ex-check" data-day="C" data-ex="cc3"></div>
+        </div>
+        <button class="complete-btn" id="btn-C" onclick="completeGym('C')">Marcar Día C como completado</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== RUNNING ===== -->
+  <div id="sec-running" class="section-page">
+    <div class="card">
+      <div class="card-title">➕ Registrar entreno de running</div>
+      <div class="form-row">
+        <input type="date" class="inp" id="e-fecha" style="max-width:155px;">
+        <input type="number" class="inp" id="e-km" placeholder="Km" step="0.1" min="0.1" style="max-width:90px;">
+        <input type="text" class="inp" id="e-tiempo" placeholder="Tiempo (0:45:00)">
+        <select class="inp" id="e-tipo" style="max-width:160px;">
+          <option value="Trote suave">Trote suave</option>
+          <option value="Ritmo moderado">Ritmo moderado</option>
+          <option value="Intervalos">Intervalos / HIIT</option>
+          <option value="Trail">Trail</option>
+          <option value="Larga distancia">Larga distancia</option>
+          <option value="Caminata">Caminata</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <input type="text" class="inp" id="e-nota" placeholder="Nota (cómo te sentiste, dónde corriste...)">
+        <button class="btn btn-primary" onclick="addRun()">Registrar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 Resumen</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;" id="run-summary"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📋 Historial</div>
+      <table class="tbl" id="runs-table" style="display:none;">
+        <thead><tr><th>Fecha</th><th>Tipo</th><th>Km</th><th>Tiempo</th><th>Pace</th><th>Nota</th><th></th></tr></thead>
+        <tbody id="runs-tbody"></tbody>
+      </table>
+      <div class="empty" id="runs-empty">No hay entrenos registrados.</div>
+    </div>
+  </div>
+
+  <!-- ===== PESO & IMC ===== -->
+  <div id="sec-peso" class="section-page">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;">
+      <div class="stat-card"><div class="stat-label">Peso actual</div><div class="stat-val" id="peso-actual-val">95</div><div class="stat-sub">kg registrado</div></div>
+      <div class="stat-card"><div class="stat-label">IMC actual</div><div class="stat-val" id="imc-actual-val">29.6</div><div class="stat-sub" id="imc-categoria-val">Sobrepeso leve</div></div>
+      <div class="stat-card"><div class="stat-label">IMC objetivo carrera</div><div class="stat-val" style="color:var(--green);">22–24</div><div class="stat-sub">~78–81 kg (1,79m)</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">📊 Medidor de IMC en tiempo real</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+        <div><div class="modal-label" style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Altura (cm)</div><input type="number" class="inp" id="altura-inp" value="179" min="140" max="220" oninput="calcIMC()" style="width:100%"></div>
+        <div><div class="modal-label" style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;">Peso actual (kg)</div><input type="number" class="inp" id="peso-imc-inp" value="95" min="40" max="200" step="0.1" oninput="calcIMC()" style="width:100%"></div>
+      </div>
+      <div class="imc-bar-track"></div>
+      <div class="imc-marker-wrap"><div class="imc-marker" id="imc-marker" style="left:57%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text3);margin-top:3px;font-family:'DM Mono',monospace;"><span>16</span><span>18.5</span><span>25</span><span>30</span><span>35</span><span>40</span></div>
+      <div style="margin-top:12px;padding:11px 15px;background:var(--bg3);border-radius:8px;display:flex;gap:18px;flex-wrap:wrap;align-items:center;">
+        <div><span style="font-size:11px;color:var(--text3);">IMC: </span><span style="font-family:'DM Mono',monospace;color:var(--accent2);font-size:16px;font-weight:500;" id="imc-display">29.6</span></div>
+        <div><span style="font-size:11px;color:var(--text3);">Estado: </span><span style="font-size:13px;" id="imc-class">Sobrepeso leve</span></div>
+        <div><span style="font-size:11px;color:var(--text3);">Para IMC 23: </span><span style="font-family:'DM Mono',monospace;color:var(--green);font-size:13px;" id="imc-target-kg">~73.6 kg</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">➕ Registrar peso</div>
+      <div class="form-row">
+        <input type="date" class="inp" id="p-fecha" style="max-width:155px;">
+        <input type="number" class="inp" id="p-kg" placeholder="Peso (kg)" step="0.1" min="40" max="200" style="max-width:130px;">
+        <input type="text" class="inp" id="p-nota" placeholder="Nota opcional">
+        <button class="btn btn-primary" onclick="addPeso()">Agregar</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚖️ Historial de peso</div>
+      <table class="tbl" id="peso-tabla" style="display:none;">
+        <thead><tr><th>Fecha</th><th>Peso</th><th>IMC</th><th>Diferencia</th><th>Nota</th><th></th></tr></thead>
+        <tbody id="peso-tbody"></tbody>
+      </table>
+      <div class="empty" id="peso-empty">No hay registros de peso.</div>
+    </div>
+  </div>
+
+  <!-- ===== PLAN FASES ===== -->
+  <div id="sec-plan" class="section-page">
+    <div class="card">
+      <div class="card-title">🗺️ Plan de 16 meses hacia El Cruce</div>
+      <div class="phase-wrap">
+        <div class="phase-item current"><div class="phase-dot"></div><div class="phase-name">Fase 1 — Base física</div><div class="phase-desc">Bajar a 83 kg. Gym 3 días/semana. Empezar a correr 3x por semana. Llegar a correr 5 km sin parar. Abdomen empieza a verse.</div><div class="phase-meta">Ago – Nov 2026 · km/semana: 10–20</div></div>
+        <div class="phase-item"><div class="phase-dot"></div><div class="phase-name">Fase 2 — Construcción aeróbica</div><div class="phase-desc">Aumentar volumen de running. Correr 4x/semana. Carreras intermedias de 5–10 km. Gym mantenimiento 2–3 días. Abdomen bien definido.</div><div class="phase-meta">Dic 2026 – May 2027 · km/semana: 25–40</div></div>
+        <div class="phase-item"><div class="phase-dot"></div><div class="phase-name">Fase 3 — Trail específico</div><div class="phase-desc">Salidas largas en terreno irregular. Simular etapas de 25–33 km. Días consecutivos de running. Carreras de 21 km+.</div><div class="phase-meta">Jun – Oct 2027 · km/semana: 45–65</div></div>
+        <div class="phase-item"><div class="phase-dot"></div><div class="phase-name">Fase 4 — Puesta a punto</div><div class="phase-desc">Reducir volumen al 60%. Descansar bien. Preparar equipamiento y nutrición de carrera. Llegar fresco a la largada.</div><div class="phase-meta">Nov 2027 · km/semana: 20–25</div></div>
+        <div class="phase-item"><div class="phase-dot"></div><div class="phase-name">🏔️ El Cruce 2027</div><div class="phase-desc">100 km en 3 días cruzando los Andes. Bariloche → Chile.</div><div class="phase-meta">Dic 2027</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📋 Rutina semanal por fase</div>
+      <div style="display:flex;gap:7px;margin-bottom:13px;flex-wrap:wrap;" id="fase-btns">
+        <button class="btn btn-ghost" onclick="showFase(1,this)" style="border-color:var(--accent-border);color:var(--accent2);">Fase 1</button>
+        <button class="btn btn-ghost" onclick="showFase(2,this)">Fase 2</button>
+        <button class="btn btn-ghost" onclick="showFase(3,this)">Fase 3</button>
+        <button class="btn btn-ghost" onclick="showFase(4,this)">Fase 4</button>
+      </div>
+      <div id="fase-content"></div>
+    </div>
+  </div>
+
+  <!-- ===== NUTRICION ===== -->
+  <div id="sec-nutricion" class="section-page">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px;">
+      <div class="stat-card" style="text-align:center;"><div class="stat-label">Calorías/día</div><div class="stat-val">2.300</div><div class="stat-sub">kcal objetivo</div></div>
+      <div class="stat-card" style="text-align:center;"><div class="stat-label">Proteína</div><div class="stat-val">175g</div><div class="stat-sub">~2g/kg peso</div></div>
+      <div class="stat-card" style="text-align:center;"><div class="stat-label">Déficit</div><div class="stat-val">~450</div><div class="stat-sub">kcal/día</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 Macros</div>
+      <div style="display:grid;grid-template-columns:1fr 80px 60px;font-size:10px;color:var(--text3);padding:0 0 7px;border-bottom:1px solid var(--border);gap:8px;"><span>Nutriente</span><span>Gramos</span><span>%</span></div>
+      <div style="display:grid;grid-template-columns:1fr 80px 60px;font-size:13px;padding:9px 0;border-bottom:1px solid var(--border);gap:8px;"><span>Proteína 🥩</span><span style="color:var(--text2);font-family:'DM Mono',monospace;">175 g</span><span style="color:var(--text2);font-family:'DM Mono',monospace;">30%</span></div>
+      <div style="display:grid;grid-template-columns:1fr 80px 60px;font-size:13px;padding:9px 0;border-bottom:1px solid var(--border);gap:8px;"><span>Carbohidratos 🍚</span><span style="color:var(--text2);font-family:'DM Mono',monospace;">220 g</span><span style="color:var(--text2);font-family:'DM Mono',monospace;">40%</span></div>
+      <div style="display:grid;grid-template-columns:1fr 80px 60px;font-size:13px;padding:9px 0;border-bottom:1px solid var(--border);gap:8px;"><span>Grasas saludables 🥑</span><span style="color:var(--text2);font-family:'DM Mono',monospace;">65 g</span><span style="color:var(--text2);font-family:'DM Mono',monospace;">27%</span></div>
+      <div style="display:grid;grid-template-columns:1fr 80px 60px;font-size:13px;padding:9px 0;gap:8px;"><span>Fibra 🥦</span><span style="color:var(--text2);font-family:'DM Mono',monospace;">30–35 g</span><span style="color:var(--text2);font-family:'DM Mono',monospace;">—</span></div>
+    </div>
+    <div class="card">
+      <div class="card-title">💡 Tips</div>
+      <div class="tip-li"><strong>Proteínas:</strong> pollo, huevos, atún, queso cottage, yogur griego, legumbres, carne magra.</div>
+      <div class="tip-li"><strong>Carbs inteligentes:</strong> avena, arroz integral, batata, pan integral. Reducirlos en la cena.</div>
+      <div class="tip-li"><strong>Post-entreno:</strong> proteína + carbo dentro de 45 min (pollo + arroz, o batido + banana).</div>
+      <div class="tip-li"><strong>Running:</strong> 2–3h antes de una salida larga, comé carbos de fácil digestión.</div>
+      <div class="tip-li"><strong>Hidratación:</strong> 3–3.5 litros/día. Más en días de gym + running.</div>
+      <div class="tip-li"><strong>Abdominales visibles:</strong> el gym los construye, el déficit calórico los muestra.</div>
+    </div>
+  </div>
+
+  <!-- ===== BACKUP ===== -->
+  <div id="sec-backup" class="section-page">
+    <div class="card"><div class="card-title">💾 Exportar</div><p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Guardá todos tus datos en un archivo JSON.</p><button class="btn btn-primary" onclick="exportData()">⬇️ Descargar backup</button></div>
+    <div class="card"><div class="card-title">📂 Importar</div><p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Restaurá desde un backup previo. Reemplaza los datos actuales.</p><input type="file" id="import-file" accept=".json" style="display:none;" onchange="importData(this)"><button class="btn btn-ghost" onclick="document.getElementById('import-file').click()">📂 Seleccionar archivo</button><div id="import-msg" style="margin-top:10px;font-size:13px;"></div></div>
+    <div class="card"><div class="card-title">ℹ️ Info</div><div style="font-size:13px;color:var(--text2);line-height:2;"><div>📱 Los datos se guardan automáticamente en el navegador.</div><div>🔄 Hacé backup regularmente para no perder el progreso.</div><div>💻 Para usar en otro dispositivo, importá tu último backup.</div></div></div>
+  </div>
+
+</main>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Editar</div>
+    <div id="modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="modal-del">🗑 Eliminar</button>
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" id="modal-save">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+  <div class="bn-inner">
+    <div class="bn-item active" id="bn-dashboard" onclick="go('dashboard')"><span class="bn-icon">🏔️</span>Inicio</div>
+    <div class="bn-item" id="bn-carreras" onclick="go('carreras')"><span class="bn-icon">🏁</span>Carreras</div>
+    <div class="bn-item" id="bn-gym" onclick="go('gym')"><span class="bn-icon">🏋️</span>Gym</div>
+    <div class="bn-item" id="bn-running" onclick="go('running')"><span class="bn-icon">🏃</span>Running</div>
+    <div class="bn-item" id="bn-peso" onclick="go('peso')"><span class="bn-icon">⚖️</span>Peso</div>
+    <div class="bn-item" id="bn-plan" onclick="go('plan')"><span class="bn-icon">📅</span>Plan</div>
+  </div>
+</nav>
+
+<script>
+const CRUCE_DATE=new Date('2027-12-05');
+const START_DATE=new Date('2026-08-01');
+const GYM_DAYS=['A','B','C'];
+let pendingResultIdx=null;
+
+function getData(){try{return JSON.parse(localStorage.getItem('cruce2027')||'{}');}catch(e){return {};}}
+function saveData(d){localStorage.setItem('cruce2027',JSON.stringify(d));}
+function getD(){const d=getData();if(!d.races)d.races=[];if(!d.runs)d.runs=[];if(!d.pesos)d.pesos=[];if(!d.gym)d.gym={};return d;}
+
+// NAV
+const PAGE_TITLES={
+  dashboard:['Dashboard','Tu camino a El Cruce 2027'],
+  carreras:['Carreras','Objetivo final y objetivos intermedios'],
+  gym:['Gym — 3 días','Rutina detallada con abdominales'],
+  running:['Running','Registrá km y tiempos de cada salida'],
+  peso:['Peso & IMC','Seguimiento con IMC automático'],
+  plan:['Plan de fases','16 meses hacia El Cruce'],
+  nutricion:['Nutrición','Plan de alimentación'],
+  backup:['Backup','Exportar e importar datos']
+};
+function go(id){
+  document.querySelectorAll('.section-page').forEach(s=>s.classList.remove('visible'));
+  document.querySelectorAll('.nav-item,.bn-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('visible');
+  document.querySelectorAll(`[onclick*="go('${id}')"]`).forEach(el=>el.classList.add('active'));
+  const[t,s]=PAGE_TITLES[id]||[id,''];
+  document.getElementById('pg-title').textContent=t;
+  document.getElementById('pg-sub').textContent=s;
+  window.scrollTo(0,0);
+  if(id==='dashboard')renderDashboard();
+  if(id==='carreras')renderRaces();
+  if(id==='gym')renderGym();
+  if(id==='running')renderRuns();
+  if(id==='peso'){renderPeso();calcIMC();}
+  if(id==='plan'){showFase(1,document.querySelector('#fase-btns button'));updatePhases();}
+}
+
+// COUNTDOWN
+function updateCountdown(){
+  const now=new Date();
+  const diff=Math.ceil((CRUCE_DATE-now)/86400000);
+  document.getElementById('sb-dias').textContent=diff>0?diff:'🏁';
+  document.getElementById('db-dias').textContent=diff>0?diff:'¡Ya!';
+  const total=(CRUCE_DATE-START_DATE)/86400000;
+  const elapsed=Math.max(0,(now-START_DATE)/86400000);
+  const pct=Math.min(100,Math.round(elapsed/total*100));
+  document.getElementById('db-prog').style.width=pct+'%';
+  document.getElementById('db-pct').textContent=pct+'%';
+}
+
+// DASHBOARD
+function renderDashboard(){
+  const d=getD();
+  updateCountdown();
+  // Stats
+  const totalKm=d.runs.reduce((s,r)=>s+r.km,0);
+  document.getElementById('db-km').textContent=totalKm.toFixed(1);
+  document.getElementById('db-km-bar').style.width=Math.min(totalKm/1000*100,100)+'%';
+  const gymTotal=Object.keys(d.gym).length;
+  document.getElementById('db-gym').textContent=gymTotal;
+  document.getElementById('db-gym-bar').style.width=Math.min(gymTotal/300*100,100)+'%';
+  const completed=d.races.filter(r=>r.result).length;
+  document.getElementById('db-races').textContent=completed;
+  document.getElementById('db-races-bar').style.width=Math.min(completed/20*100,100)+'%';
+  const lastP=d.pesos.length>0?d.pesos[d.pesos.length-1].kg:95;
+  document.getElementById('db-peso').textContent=lastP;
+  const h=(parseFloat(document.getElementById('altura-inp')?.value)||179)/100;
+  const imc=(lastP/(h*h)).toFixed(1);
+  document.getElementById('db-imc').textContent=imc;
+  const pProg=Math.max(0,Math.min(100,(95-lastP)/(95-75)*100));
+  document.getElementById('db-peso-bar').style.width=pProg+'%';
+  // Streak gym
+  const today=new Date().toISOString().split('T')[0];
+  let streak=0;let check=new Date();
+  for(let i=0;i<365;i++){const ds=check.toISOString().split('T')[0];if(GYM_DAYS.some(day=>d.gym[ds+'_'+day])){streak++;check.setDate(check.getDate()-1);}else break;}
+  document.getElementById('sb-streak').textContent=streak;
+  // Week strip
+  renderWeekStrip(d);
+  // Next race
+  const todayDate=new Date();todayDate.setHours(0,0,0,0);
+  const upcoming=d.races.filter(r=>new Date(r.fecha+'T00:00:00')>=todayDate&&!r.result).sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  const el=document.getElementById('db-next-race');
+  if(upcoming.length===0){el.innerHTML='<div class="empty" style="padding:16px;">Sin carreras próximas. Agregalas en Carreras.</div>';}
+  else{const r=upcoming[0];const dt=new Date(r.fecha+'T00:00:00');const days=Math.ceil((dt-todayDate)/86400000);el.innerHTML=`<div class="race-card next-r" style="margin:0;"><div class="race-date-box"><div class="race-day">${dt.getDate()}</div><div class="race-month">${dt.toLocaleString('es',{month:'short'})} ${dt.getFullYear()}</div></div><div class="race-info"><div class="race-name">${r.nombre}</div><div class="race-meta">${r.km} km${r.tipo?' · '+tipoIcon(r.tipo)+' '+r.tipo:''}${r.lugar?' · '+r.lugar:''}</div></div><div class="days-to">en ${days}d</div></div>`;}
+  // Last run
+  const el2=document.getElementById('db-last-run');
+  const lastRuns=[...d.runs].sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  if(lastRuns.length===0){el2.innerHTML='<div class="empty" style="padding:16px;">Sin entrenos registrados.</div>';}
+  else{const r=lastRuns[0];el2.innerHTML=`<div style="padding:4px 0;"><div style="font-size:13px;font-weight:500;">${r.tipo}</div><div style="font-size:12px;color:var(--text2);margin-top:4px;">${r.fecha}</div><div style="display:flex;gap:14px;margin-top:8px;"><span style="font-family:'DM Mono',monospace;color:var(--accent2);">${r.km} km</span><span style="font-family:'DM Mono',monospace;color:var(--blue);">${r.tiempo||'—'}</span><span style="font-family:'DM Mono',monospace;color:var(--text3);font-size:11px;">${calcPace(r.km,r.tiempo)}</span></div>${r.nota?`<div style="font-size:11px;color:var(--text3);margin-top:5px;">${r.nota}</div>`:''}</div>`;}
+}
+
+function renderWeekStrip(d){
+  const today=new Date();
+  const DAY_N=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  const wrap=document.getElementById('db-week');if(!wrap)return;wrap.innerHTML='';
+  for(let i=0;i<7;i++){
+    const dt=new Date(today);dt.setDate(today.getDate()-today.getDay()+i);
+    const ds=dt.toISOString().split('T')[0];
+    const isToday=ds===today.toISOString().split('T')[0];
+    const hasGym=GYM_DAYS.some(day=>d.gym[ds+'_'+day]);
+    const hasRun=d.runs.some(r=>r.fecha===ds);
+    const done=hasGym||hasRun;
+    const div=document.createElement('div');
+    div.className='wd'+(isToday?' today':'')+(done?' done':'');
+    div.innerHTML=`<div class="wd-n">${DAY_N[i]}</div><div class="wd-d">${dt.getDate()}</div><div class="wd-dot"></div>`;
+    wrap.appendChild(div);
+  }
+}
+
+// GYM
+function toggleDay(day){document.getElementById('card-'+day).classList.toggle('open');}
+
+function completeGym(day){
+  const d=getD();
+  const today=new Date().toISOString().split('T')[0];
+  const key=today+'_'+day;
+  if(d.gym[key])delete d.gym[key];else d.gym[key]=true;
+  saveData(d);renderGym();
+}
+
+function renderGym(){
+  const d=getD();
+  const today=new Date().toISOString().split('T')[0];
+  // Week stats
+  const weekStart=new Date();weekStart.setDate(weekStart.getDate()-weekStart.getDay());
+  const weekStr=weekStart.toISOString().split('T')[0];
+  const weekDone=GYM_DAYS.filter(day=>Object.keys(d.gym).some(k=>k>=weekStr&&k.endsWith('_'+day))).length;
+  const gymTotal=Object.keys(d.gym).length;
+  document.getElementById('gym-week').textContent=weekDone+'/3';
+  document.getElementById('gym-week-bar').style.width=Math.min(weekDone/3*100,100)+'%';
+  document.getElementById('gym-total').textContent=gymTotal;
+  // Streak
+  let streak=0;let check=new Date();
+  for(let i=0;i<365;i++){const ds=check.toISOString().split('T')[0];if(GYM_DAYS.some(day=>d.gym[ds+'_'+day])){streak++;check.setDate(check.getDate()-1);}else break;}
+  document.getElementById('gym-racha').textContent=streak;
+  document.getElementById('sb-streak').textContent=streak;
+  // Cards
+  GYM_DAYS.forEach(day=>{
+    const key=today+'_'+day;
+    const btn=document.getElementById('btn-'+day);
+    const card=document.getElementById('card-'+day);
+    const num=document.getElementById('num-'+day);
+    if(d.gym[key]){btn.textContent='✓ Completado hoy';btn.classList.add('done');card.classList.add('done-day');if(num)num.textContent='✓';}
+    else{btn.textContent='Marcar Día '+day+' como completado';btn.classList.remove('done');card.classList.remove('done-day');if(num)num.textContent=day;}
+  });
+}
+
+// RACES
+function tipoIcon(tipo){const icons={'Asfalto':'🏙️','Trail':'🌲','Montaña':'🏔️','Cross':'🌿','Pista':'🏟️','Etapas':'📅','Virtual':'💻'};return icons[tipo]||'🏁';}
+
+function addRace(){
+  const nombre=document.getElementById('r-nombre').value.trim();
+  const fecha=document.getElementById('r-fecha').value;
+  const km=parseFloat(document.getElementById('r-km').value);
+  const tipo=document.getElementById('r-tipo').value;
+  const lugar=document.getElementById('r-lugar').value.trim();
+  if(!nombre||!fecha||isNaN(km)){alert('Completá nombre, fecha y km.');return;}
+  const d=getD();
+  d.races.push({nombre,fecha,km,tipo,lugar,result:null});
+  d.races.sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  saveData(d);
+  ['r-nombre','r-km','r-lugar'].forEach(id=>document.getElementById(id).value='');
+  renderRaces();
+}
+
+function renderRaces(){
+  const d=getD();const el=document.getElementById('races-list');
+  if(d.races.length===0){el.innerHTML='<div class="empty">No hay carreras. Agregá la primera arriba.</div>';return;}
+  const today=new Date();today.setHours(0,0,0,0);
+  el.innerHTML=d.races.map((r,i)=>{
+    const dt=new Date(r.fecha+'T00:00:00');
+    const isPast=dt<today;
+    const isNext=!isPast&&!d.races.slice(0,i).some(rr=>new Date(rr.fecha+'T00:00:00')>=today&&!rr.result);
+    const days=Math.ceil((dt-today)/86400000);
+    const cls=r.result?'completed':(isPast?'past':(isNext?'next-r':''));
+    const isFinal=r.nombre.toLowerCase().includes('cruce');
+    return `<div class="race-card ${cls}">
+      <div class="race-date-box"><div class="race-day">${dt.getDate()}</div><div class="race-month">${dt.toLocaleString('es',{month:'short'})} ${dt.getFullYear()}</div></div>
+      <div class="race-info">
+        <div class="race-name">${isFinal?'🏔️ ':''}<strong>${r.nombre}</strong></div>
+        <div style="display:flex;align-items:center;gap:7px;margin-top:3px;flex-wrap:wrap;">
+          ${r.tipo?`<span style="font-size:9px;font-weight:500;padding:2px 7px;border-radius:4px;background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-border);">${tipoIcon(r.tipo)} ${r.tipo}</span>`:''}
+          <span style="font-size:12px;color:var(--text2);">${r.km} km${r.lugar?' · '+r.lugar:''}${r.result?' · ⏱ '+r.result.tiempo:''}</span>
+        </div>
+        ${r.result&&r.result.nota?`<div style="font-size:11px;color:var(--text3);margin-top:3px;">${r.result.nota}</div>`:''}
+      </div>
+      <div class="race-actions">
+        ${r.result?`<span class="race-result">✓ ${r.result.tiempo}</span>`:(isPast?`<button class="btn btn-green" onclick="openResult(${i})" style="font-size:11px;padding:5px 9px;">Resultado</button>`:`<span class="days-to">en ${days}d</span>`)}
+        <button class="del-btn" onclick="editRace(${i})">✏️</button>
+        <button class="del-btn" onclick="deleteRace(${i})">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function editRace(i){
+  const d=getD();const r=d.races[i];
+  openModal('Editar carrera',
+    `<div class="modal-row"><div class="modal-label">Nombre</div><input class="inp" id="ed-n" value="${r.nombre}" style="width:100%"></div>
+     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+       <div class="modal-row"><div class="modal-label">Fecha</div><input type="date" class="inp" id="ed-f" value="${r.fecha}" style="width:100%"></div>
+       <div class="modal-row"><div class="modal-label">Km</div><input type="number" class="inp" id="ed-k" value="${r.km}" step="0.1" style="width:100%"></div>
+       <div class="modal-row"><div class="modal-label">Tipo</div><select class="inp" id="ed-t" style="width:100%">${['Asfalto','Trail','Montaña','Cross','Pista','Etapas','Virtual'].map(t=>`<option value="${t}" ${r.tipo===t?'selected':''}>${tipoIcon(t)} ${t}</option>`).join('')}</select></div>
+       <div class="modal-row"><div class="modal-label">Lugar</div><input class="inp" id="ed-l" value="${r.lugar||''}" style="width:100%"></div>
+     </div>`,
+    ()=>{const d2=getD();d2.races[i].nombre=document.getElementById('ed-n').value.trim()||d2.races[i].nombre;d2.races[i].fecha=document.getElementById('ed-f').value||d2.races[i].fecha;d2.races[i].km=parseFloat(document.getElementById('ed-k').value)||d2.races[i].km;d2.races[i].tipo=document.getElementById('ed-t').value;d2.races[i].lugar=document.getElementById('ed-l').value.trim();d2.races.sort((a,b)=>a.fecha.localeCompare(b.fecha));saveData(d2);closeModal();renderRaces();},
+    ()=>deleteRace(i)
+  );
+}
+function deleteRace(i){if(!confirm('¿Eliminar esta carrera?'))return;const d=getD();d.races.splice(i,1);saveData(d);renderRaces();}
+function openResult(i){pendingResultIdx=i;document.getElementById('result-card').style.display='block';document.getElementById('res-time').focus();document.getElementById('result-card').scrollIntoView({behavior:'smooth'});}
+function saveResult(){if(pendingResultIdx===null)return;const tiempo=document.getElementById('res-time').value.trim();const nota=document.getElementById('res-nota').value.trim();if(!tiempo){alert('Ingresá el tiempo.');return;}const d=getD();d.races[pendingResultIdx].result={tiempo,nota};saveData(d);document.getElementById('result-card').style.display='none';document.getElementById('res-time').value='';document.getElementById('res-nota').value='';pendingResultIdx=null;renderRaces();}
+
+// RUNNING
+function calcPace(km,tiempo){
+  if(!tiempo||!km)return'—';
+  const parts=tiempo.split(':').map(Number);let secs=0;
+  if(parts.length===3)secs=parts[0]*3600+parts[1]*60+parts[2];
+  else if(parts.length===2)secs=parts[0]*60+parts[1];
+  if(!secs)return'—';
+  const p=secs/km;const m=Math.floor(p/60);const s=Math.round(p%60);
+  return`${m}:${s.toString().padStart(2,'0')}/km`;
+}
+function paceToSecs(km,tiempo){
+  if(!tiempo||!km)return null;
+  const parts=tiempo.split(':').map(Number);let secs=0;
+  if(parts.length===3)secs=parts[0]*3600+parts[1]*60+parts[2];
+  else if(parts.length===2)secs=parts[0]*60+parts[1];
+  return secs?secs/km:null;
+}
+function secsToMinKm(s){if(!s)return'—';const m=Math.floor(s/60);const ss=Math.round(s%60);return`${m}:${ss.toString().padStart(2,'0')}/km`;}
+
+function addRun(){
+  const fecha=document.getElementById('e-fecha').value;
+  const km=parseFloat(document.getElementById('e-km').value);
+  const tiempo=document.getElementById('e-tiempo').value.trim();
+  const tipo=document.getElementById('e-tipo').value;
+  const nota=document.getElementById('e-nota').value.trim();
+  if(!fecha||isNaN(km)){alert('Completá fecha y km.');return;}
+  const d=getD();
+  d.runs.push({fecha,km,tiempo,tipo,nota});
+  d.runs.sort((a,b)=>b.fecha.localeCompare(a.fecha));
+  saveData(d);
+  ['e-km','e-tiempo','e-nota'].forEach(id=>document.getElementById(id).value='');
+  renderRuns();
+}
+
+function editRun(i){
+  const d=getD();const r=d.runs[i];
+  const tipos=['Trote suave','Ritmo moderado','Intervalos / HIIT','Trail','Larga distancia','Caminata'];
+  openModal('Editar entreno',
+    `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+       <div class="modal-row"><div class="modal-label">Fecha</div><input type="date" class="inp" id="er-f" value="${r.fecha}" style="width:100%"></div>
+       <div class="modal-row"><div class="modal-label">Km</div><input type="number" class="inp" id="er-k" value="${r.km}" step="0.1" style="width:100%"></div>
+       <div class="modal-row"><div class="modal-label">Tiempo</div><input class="inp" id="er-t" value="${r.tiempo||''}" placeholder="0:45:00" style="width:100%"></div>
+       <div class="modal-row"><div class="modal-label">Tipo</div><select class="inp" id="er-tp" style="width:100%">${tipos.map(t=>`<option value="${t}" ${r.tipo===t?'selected':''}>${t}</option>`).join('')}</select></div>
+     </div>
+     <div class="modal-row"><div class="modal-label">Nota</div><input class="inp" id="er-n" value="${r.nota||''}" placeholder="Nota..." style="width:100%"></div>`,
+    ()=>{const d2=getD();d2.runs[i].fecha=document.getElementById('er-f').value||d2.runs[i].fecha;d2.runs[i].km=parseFloat(document.getElementById('er-k').value)||d2.runs[i].km;d2.runs[i].tiempo=document.getElementById('er-t').value.trim();d2.runs[i].tipo=document.getElementById('er-tp').value;d2.runs[i].nota=document.getElementById('er-n').value.trim();d2.runs.sort((a,b)=>b.fecha.localeCompare(a.fecha));saveData(d2);closeModal();renderRuns();},
+    ()=>deleteRun(i)
+  );
+}
+function deleteRun(i){if(!confirm('¿Eliminar este entreno?'))return;const d=getD();d.runs.splice(i,1);saveData(d);renderRuns();}
+
+function renderRuns(){
+  const d=getD();
+  const today=new Date();
+  const weekStart=new Date(today);weekStart.setDate(today.getDate()-today.getDay());
+  const weekRuns=d.runs.filter(r=>new Date(r.fecha+'T00:00:00')>=weekStart);
+  const weekKm=weekRuns.reduce((s,r)=>s+r.km,0);
+  const monthRuns=d.runs.filter(r=>{const dt=new Date(r.fecha+'T00:00:00');return dt.getMonth()===today.getMonth()&&dt.getFullYear()===today.getFullYear();});
+  const monthKm=monthRuns.reduce((s,r)=>s+r.km,0);
+  const totalKm=d.runs.reduce((s,r)=>s+r.km,0);
+  const runsConT=d.runs.filter(r=>r.tiempo&&r.km);
+  const paces=runsConT.map(r=>paceToSecs(r.km,r.tiempo)).filter(Boolean);
+  const avgPace=paces.length?paces.reduce((a,b)=>a+b,0)/paces.length:null;
+  const bestPace=paces.length?Math.min(...paces):null;
+  const wPaces=weekRuns.filter(r=>r.tiempo&&r.km).map(r=>paceToSecs(r.km,r.tiempo)).filter(Boolean);
+  const wAvgPace=wPaces.length?wPaces.reduce((a,b)=>a+b,0)/wPaces.length:null;
+
+  document.getElementById('run-summary').innerHTML=`
+    <div style="background:var(--bg3);border-radius:8px;padding:11px;text-align:center;"><div class="stat-label">Esta semana</div><div style="font-size:20px;font-weight:300;font-family:'DM Mono',monospace;color:var(--accent2);margin:3px 0;">${weekKm.toFixed(1)}</div><div class="stat-sub">km · ${weekRuns.length} salidas${wAvgPace?'<br><span style="font-family:DM Mono,monospace;font-size:10px;color:var(--text3);">'+secsToMinKm(wAvgPace)+'</span>':''}</div></div>
+    <div style="background:var(--bg3);border-radius:8px;padding:11px;text-align:center;"><div class="stat-label">Este mes</div><div style="font-size:20px;font-weight:300;font-family:'DM Mono',monospace;color:var(--blue);margin:3px 0;">${monthKm.toFixed(1)}</div><div class="stat-sub">km · ${monthRuns.length} salidas</div></div>
+    <div style="background:var(--bg3);border-radius:8px;padding:11px;text-align:center;"><div class="stat-label">Total acumulado</div><div style="font-size:20px;font-weight:300;font-family:'DM Mono',monospace;color:var(--green);margin:3px 0;">${totalKm.toFixed(1)}</div><div class="stat-sub">km · ${d.runs.length} salidas</div></div>
+    ${avgPace?`<div style="background:var(--bg3);border-radius:8px;padding:11px;text-align:center;border:1px solid rgba(212,168,58,0.2);"><div class="stat-label">Pace promedio</div><div style="font-size:18px;font-weight:300;font-family:'DM Mono',monospace;color:var(--yellow);margin:3px 0;">${secsToMinKm(avgPace)}</div><div class="stat-sub">todos los entrenos</div></div>
+    <div style="background:var(--bg3);border-radius:8px;padding:11px;text-align:center;border:1px solid rgba(92,184,138,0.2);"><div class="stat-label">Mejor pace 🏆</div><div style="font-size:18px;font-weight:300;font-family:'DM Mono',monospace;color:var(--green);margin:3px 0;">${secsToMinKm(bestPace)}</div><div class="stat-sub">récord personal</div></div>`:''}`;
+
+  const tbody=document.getElementById('runs-tbody');
+  const empty=document.getElementById('runs-empty');
+  const tbl=document.getElementById('runs-table');
+  if(d.runs.length===0){empty.style.display='block';tbl.style.display='none';return;}
+  empty.style.display='none';tbl.style.display='table';
+  tbody.innerHTML=d.runs.map((r,i)=>`<tr>
+    <td style="font-family:'DM Mono',monospace;font-size:11px;">${r.fecha}</td>
+    <td style="color:var(--text2);">${r.tipo}</td>
+    <td style="font-family:'DM Mono',monospace;color:var(--accent2);">${r.km} km</td>
+    <td style="font-family:'DM Mono',monospace;color:var(--blue);">${r.tiempo||'—'}</td>
+    <td style="font-family:'DM Mono',monospace;color:var(--text3);font-size:11px;">${calcPace(r.km,r.tiempo)}</td>
+    <td style="color:var(--text3);font-size:11px;max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${r.nota||'—'}</td>
+    <td style="white-space:nowrap;"><button class="del-btn" onclick="editRun(${i})">✏️</button><button class="del-btn" onclick="deleteRun(${i})">✕</button></td>
+  </tr>`).join('');
+}
+
+// PESO & IMC
+function imcClass(imc){
+  if(imc<18.5)return{label:'Bajo peso',color:'#378ADD'};
+  if(imc<25)return{label:'Peso normal ✓',color:'#5cb88a'};
+  if(imc<30)return{label:'Sobrepeso leve',color:'#d4a83a'};
+  if(imc<35)return{label:'Obesidad I',color:'#d46b5a'};
+  return{label:'Obesidad II',color:'#a32d2d'};
+}
+function calcIMC(){
+  const h=(parseFloat(document.getElementById('altura-inp')?.value)||179)/100;
+  const p=parseFloat(document.getElementById('peso-imc-inp')?.value)||95;
+  const imc=+(p/(h*h)).toFixed(1);
+  const cls=imcClass(imc);
+  const pct=Math.max(0,Math.min(100,(imc-16)/(40-16)*100));
+  const mk=document.getElementById('imc-marker');if(mk)mk.style.left=pct+'%';
+  const di=document.getElementById('imc-display');if(di)di.textContent=imc;
+  const cl=document.getElementById('imc-class');if(cl){cl.textContent=cls.label;cl.style.color=cls.color;}
+  const tk=+(23*h*h).toFixed(1);
+  const tg=document.getElementById('imc-target-kg');if(tg)tg.textContent='~'+tk+' kg';
+  const av=document.getElementById('imc-actual-val');if(av)av.textContent=imc;
+  const ac=document.getElementById('imc-categoria-val');if(ac){ac.textContent=cls.label;ac.style.color=cls.color;}
+  const pav=document.getElementById('peso-actual-val');if(pav)pav.textContent=p;
+  const dbi=document.getElementById('db-imc');if(dbi)dbi.textContent=imc;
+}
+
+function addPeso(){
+  const fecha=document.getElementById('p-fecha').value;
+  const kg=parseFloat(document.getElementById('p-kg').value);
+  const nota=document.getElementById('p-nota').value.trim();
+  if(!fecha||isNaN(kg)){alert('Completá fecha y peso.');return;}
+  const h=(parseFloat(document.getElementById('altura-inp')?.value)||179)/100;
+  const imc=+(kg/(h*h)).toFixed(1);
+  const d=getD();
+  d.pesos.push({fecha,kg,nota,imc});
+  d.pesos.sort((a,b)=>a.fecha.localeCompare(b.fecha));
+  saveData(d);
+  document.getElementById('p-kg').value='';
+  document.getElementById('p-nota').value='';
+  document.getElementById('peso-imc-inp').value=kg;
+  calcIMC();renderPeso();
+}
+
+function editPeso(i){
+  const d=getD();const p=d.pesos[i];
+  openModal('Editar registro de peso',
+    `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+       <div class="modal-row"><div class="modal-label">Fecha</div><input type="date" class="inp" id="ep-f" value="${p.fecha}" style="width:100%"></div>
+       <div class="modal-row"><div class="modal-label">Peso (kg)</div><input type="number" class="inp" id="ep-k" value="${p.kg}" step="0.1" style="width:100%"></div>
+     </div>
+     <div class="modal-row"><div class="modal-label">Nota</div><input class="inp" id="ep-n" value="${p.nota||''}" style="width:100%"></div>`,
+    ()=>{const d2=getD();const newKg=parseFloat(document.getElementById('ep-k').value)||d2.pesos[i].kg;const h=(parseFloat(document.getElementById('altura-inp')?.value)||179)/100;d2.pesos[i].fecha=document.getElementById('ep-f').value||d2.pesos[i].fecha;d2.pesos[i].kg=newKg;d2.pesos[i].imc=+(newKg/(h*h)).toFixed(1);d2.pesos[i].nota=document.getElementById('ep-n').value.trim();d2.pesos.sort((a,b)=>a.fecha.localeCompare(b.fecha));saveData(d2);closeModal();renderPeso();calcIMC();},
+    ()=>deletePeso(i)
+  );
+}
+function deletePeso(i){if(!confirm('¿Eliminar este registro?'))return;const d=getD();d.pesos.splice(i,1);saveData(d);renderPeso();calcIMC();}
+
+function renderPeso(){
+  const d=getD();
+  const tbody=document.getElementById('peso-tbody');
+  const empty=document.getElementById('peso-empty');
+  const tbl=document.getElementById('peso-tabla');
+  if(!tbody)return;
+  if(d.pesos.length===0){empty.style.display='block';tbl.style.display='none';return;}
+  empty.style.display='none';tbl.style.display='table';
+  const last=d.pesos[d.pesos.length-1];
+  const pesoInp=document.getElementById('peso-imc-inp');
+  if(pesoInp)pesoInp.value=last.kg;
+  calcIMC();
+  tbody.innerHTML=[...d.pesos].reverse().map((p,i,arr)=>{
+    const realIdx=d.pesos.length-1-i;
+    const prev=i<arr.length-1?arr[i+1].kg:95;
+    const diff=(p.kg-prev).toFixed(1);
+    const color=parseFloat(diff)<0?'var(--green)':parseFloat(diff)>0?'var(--red)':'var(--text3)';
+    const imcColor=p.imc<=24.9?'var(--green)':p.imc<=29.9?'var(--yellow)':'var(--red)';
+    return`<tr>
+      <td style="font-family:'DM Mono',monospace;font-size:11px;">${p.fecha}</td>
+      <td style="font-family:'DM Mono',monospace;">${p.kg} kg</td>
+      <td style="font-family:'DM Mono',monospace;color:${imcColor};">${p.imc||'—'}</td>
+      <td style="color:${color};font-family:'DM Mono',monospace;">${parseFloat(diff)>0?'+':''}${diff} kg</td>
+      <td style="color:var(--text3);font-size:11px;">${p.nota||'—'}</td>
+      <td style="white-space:nowrap;"><button class="del-btn" onclick="editPeso(${realIdx})">✏️</button><button class="del-btn" onclick="deletePeso(${realIdx})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// PLAN
+const FASE_RUTINAS={
+  1:`<div style="font-size:13px;color:var(--text2);line-height:1.9;padding:10px 14px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--accent-border);"><strong style="color:var(--text);">Lunes</strong> — Gym Día A (Pecho/Hombros/Tríceps/Core)<br><strong style="color:var(--text);">Martes</strong> — Trote suave 25–30 min<br><strong style="color:var(--text);">Miércoles</strong> — Gym Día B (Espalda/Bíceps/Core)<br><strong style="color:var(--text);">Jueves</strong> — Caminata rápida 40 min o trote 25 min<br><strong style="color:var(--text);">Viernes</strong> — Gym Día C (Piernas/Core)<br><strong style="color:var(--text);">Sábado</strong> — Salida larga: caminata/trote 45–60 min<br><strong style="color:var(--text);">Domingo</strong> — Descanso activo: elongación</div><div style="padding:9px 13px;background:var(--yellow-bg);border-radius:8px;font-size:12px;color:var(--text2);margin-top:10px;">💡 <strong style="color:var(--yellow);">Objetivo:</strong> correr 5 km sin parar, bajar a 83 kg, abdomen empieza a verse.</div>`,
+  2:`<div style="font-size:13px;color:var(--text2);line-height:1.9;padding:10px 14px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--blue-border);"><strong style="color:var(--text);">Lunes</strong> — Trote moderado 40 min<br><strong style="color:var(--text);">Martes</strong> — Gym Día A<br><strong style="color:var(--text);">Miércoles</strong> — Intervalos: 6×400m + recuperación<br><strong style="color:var(--text);">Jueves</strong> — Gym Día B<br><strong style="color:var(--text);">Viernes</strong> — Trote 35 min + cuestas 10 min<br><strong style="color:var(--text);">Sábado</strong> — Salida larga: 12–18 km suave<br><strong style="color:var(--text);">Domingo</strong> — Gym Día C o descanso</div><div style="padding:9px 13px;background:var(--blue-bg);border-radius:8px;font-size:12px;color:var(--text2);margin-top:10px;">💡 <strong style="color:var(--blue);">Objetivo:</strong> correr 20 km con comodidad. Carreras intermedias de 5–10 km.</div>`,
+  3:`<div style="font-size:13px;color:var(--text2);line-height:1.9;padding:10px 14px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--green-border);"><strong style="color:var(--text);">Lunes</strong> — Trote recuperativo 35 min<br><strong style="color:var(--text);">Martes</strong> — Trail o terreno irregular 1h + desnivel<br><strong style="color:var(--text);">Miércoles</strong> — Gym Día C (piernas explosivas)<br><strong style="color:var(--text);">Jueves</strong> — Tempo run 50 min<br><strong style="color:var(--text);">Viernes</strong> — Descanso o trote suave 30 min<br><strong style="color:var(--text);">Sábado</strong> — Salida larga 25–33 km en trail<br><strong style="color:var(--text);">Domingo</strong> — Recuperación 8–12 km suave</div><div style="padding:9px 13px;background:var(--green-bg);border-radius:8px;font-size:12px;color:var(--text2);margin-top:10px;">💡 <strong style="color:var(--green);">Objetivo:</strong> completar 33 km y recuperarte para correr al día siguiente.</div>`,
+  4:`<div style="font-size:13px;color:var(--text2);line-height:1.9;padding:10px 14px;background:var(--bg3);border-radius:8px;border-left:3px solid var(--accent-border);"><strong style="color:var(--text);">Lunes</strong> — Trote suave 30 min<br><strong style="color:var(--text);">Martes</strong> — Trote moderado 35 min<br><strong style="color:var(--text);">Miércoles</strong> — Descanso<br><strong style="color:var(--text);">Jueves</strong> — Trote suave 25 min<br><strong style="color:var(--text);">Viernes</strong> — Descanso<br><strong style="color:var(--text);">Sábado</strong> — 12–15 km relajada<br><strong style="color:var(--text);">Domingo</strong> — Elongación y descanso total</div><div style="padding:9px 13px;background:var(--accent-bg);border-radius:8px;font-size:12px;color:var(--text2);margin-top:10px;">💡 <strong style="color:var(--accent2);">Objetivo:</strong> llegar descansado y con piernas frescas a El Cruce.</div>`
+};
+function showFase(n,btn){
+  document.querySelectorAll('#fase-btns button').forEach(b=>{b.style.borderColor='';b.style.color='';});
+  if(btn){btn.style.borderColor='var(--accent-border)';btn.style.color='var(--accent2)';}
+  document.getElementById('fase-content').innerHTML=FASE_RUTINAS[n];
+}
+function updatePhases(){
+  const now=new Date();
+  const phases=[
+    {id:'fase1',start:new Date('2026-08-01'),end:new Date('2026-11-30')},
+    {id:'fase2',start:new Date('2026-12-01'),end:new Date('2027-05-31')},
+    {id:'fase3',start:new Date('2027-06-01'),end:new Date('2027-10-31')},
+    {id:'fase4',start:new Date('2027-11-01'),end:new Date('2027-11-30')},
+    {id:'fase5',start:new Date('2027-12-01'),end:new Date('2027-12-31')},
+  ];
+  phases.forEach((p,idx)=>{
+    const items=document.querySelectorAll('.phase-item');
+    if(!items[idx])return;
+    const dot=items[idx].querySelector('.phase-dot');
+    if(now>p.end){items[idx].className='phase-item done';if(dot){dot.style.borderColor='var(--green)';dot.style.background='var(--green-bg)';}}
+    else if(now>=p.start){items[idx].className='phase-item current';if(dot){dot.style.borderColor='var(--accent)';dot.style.background='var(--accent-bg)';}}
+    else{items[idx].className='phase-item';if(dot){dot.style.borderColor='';dot.style.background='';}}
+  });
+}
+
+// MODAL
+function openModal(title,body,onSave,onDelete){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-body').innerHTML=body;
+  document.getElementById('modal-save').onclick=onSave;
+  document.getElementById('modal-del').onclick=()=>{closeModal();setTimeout(onDelete,100);};
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');}
+
+// BACKUP
+function exportData(){
+  const d=getData();
+  const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`cruce2027_backup_${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+}
+function importData(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{const data=JSON.parse(e.target.result);if(!confirm('¿Reemplazar todos los datos actuales?'))return;saveData(data);document.getElementById('import-msg').innerHTML='<span style="color:var(--green);">✓ Importado correctamente.</span>';renderDashboard();}
+    catch(err){document.getElementById('import-msg').innerHTML='<span style="color:var(--red);">✕ Error al leer el archivo.</span>';}
+  };
+  reader.readAsText(file);
+}
+
+// INIT
+const now=new Date();
+document.getElementById('date-badge').textContent=now.toLocaleDateString('es-AR',{weekday:'short',day:'numeric',month:'short',year:'numeric'});
+document.getElementById('e-fecha').value=now.toISOString().split('T')[0];
+document.getElementById('p-fecha').value=now.toISOString().split('T')[0];
+document.getElementById('r-fecha').value=now.toISOString().split('T')[0];
+renderDashboard();
+calcIMC();
+</script>
+</body>
+</html>
